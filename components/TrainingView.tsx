@@ -101,7 +101,6 @@ export const TrainingView: React.FC = () => {
       <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
          
          {/* Left: Dashboard Visualization */}
-         {/* FIX: Added min-h-0 and overflow-y-auto to ensure scrolling works on mobile if content overflows */}
          <div className="flex-1 bg-slate-50/30 p-4 lg:p-8 flex flex-col gap-6 items-center justify-start overflow-y-auto min-h-0 relative">
             
             {/* 1. Status Cycle */}
@@ -141,8 +140,7 @@ export const TrainingView: React.FC = () => {
             </div>
 
             {/* 2. Educational Concept Card (The "Why") */}
-            {/* FIX: Removed flex-shrink-0 to allow scrolling if needed, added w-full */}
-            <div className="w-full max-w-lg bg-white rounded-xl border border-slate-200 shadow-lg overflow-hidden transition-all duration-500">
+            <div className="w-full max-w-lg bg-white rounded-xl border border-slate-200 shadow-lg overflow-hidden transition-all duration-500 flex-shrink-0">
                <div className={`px-4 py-3 border-b flex items-center gap-2 ${
                   step === 1 ? 'bg-blue-50 border-blue-100 text-blue-800' :
                   step === 2 ? 'bg-rose-50 border-rose-100 text-rose-800' :
@@ -194,8 +192,7 @@ export const TrainingView: React.FC = () => {
          </div>
 
          {/* Right: Code Panel with Active Highlighting */}
-         {/* FIX: Set height to 45vh on mobile to ensure it's visible without overlapping */}
-         <div className="w-full lg:w-[500px] bg-slate-900 border-t lg:border-t-0 lg:border-l border-slate-700 flex flex-col shadow-2xl h-[45vh] lg:h-auto flex-shrink-0 z-20">
+         <div className="w-full lg:w-[500px] bg-slate-900 border-t lg:border-t-0 lg:border-l border-slate-700 flex flex-col shadow-2xl h-[40vh] lg:h-auto flex-shrink-0 z-20">
              <div className="p-3 border-b border-slate-700 flex items-center gap-2 text-slate-400 bg-slate-900 z-10 flex-shrink-0 sticky top-0">
                 <FileCode size={16} />
                 <span className="text-sm font-bold">main.py (训练部分)</span>

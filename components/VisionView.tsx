@@ -172,8 +172,8 @@ export const VisionView: React.FC<{ activeSubTab: string }> = ({ activeSubTab })
             </div>
         </div>
 
-        {/* Code Panel */}
-        <div className="w-full lg:w-[450px] h-[45vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
+        {/* Code Panel - Fixed bottom on mobile */}
+        <div className="w-full lg:w-[450px] h-[40vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
             <h3 className="text-cyan-400 font-bold mb-4 flex items-center gap-2 sticky top-0 bg-slate-900 py-2 border-b border-slate-800 z-20">
                <Terminal size={16} /> 源代码解析
             </h3>
@@ -354,8 +354,8 @@ export const VisionView: React.FC<{ activeSubTab: string }> = ({ activeSubTab })
                </div>
            </div>
 
-            {/* Code Panel */}
-            <div className="w-full lg:w-[450px] h-[45vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
+            {/* Code Panel - Fixed bottom on mobile */}
+            <div className="w-full lg:w-[450px] h-[40vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
                 <h3 className="text-cyan-400 font-bold mb-4 flex items-center gap-2 sticky top-0 bg-slate-900 py-2 border-b border-slate-800 z-20">
                 <Terminal size={16} /> 核心代码：MobileNetV2Head
                 </h3>
@@ -415,7 +415,8 @@ export const VisionView: React.FC<{ activeSubTab: string }> = ({ activeSubTab })
                         </div>
                     </div>
             </div>
-            <div className="w-full lg:w-[450px] h-[45vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
+            {/* Code Panel - Fixed bottom on mobile */}
+            <div className="w-full lg:w-[450px] h-[40vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
                  <h3 className="text-cyan-400 font-bold mb-4 flex items-center gap-2 sticky top-0 bg-slate-900 py-2 border-b border-slate-800 z-20"><Terminal size={16}/> 核心代码</h3>
                  <div className="font-mono text-xs leading-relaxed space-y-4 whitespace-pre-wrap">
                     <div className="p-4 bg-slate-800/50 rounded border border-slate-700">
@@ -483,7 +484,8 @@ export const VisionView: React.FC<{ activeSubTab: string }> = ({ activeSubTab })
                </div>
            </div>
            
-           <div className="w-full lg:w-[450px] h-[45vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
+           {/* Code Panel - Fixed bottom on mobile */}
+           <div className="w-full lg:w-[450px] h-[40vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
                <h3 className="text-cyan-400 font-bold mb-4 flex items-center gap-2 sticky top-0 bg-slate-900 py-2 border-b border-slate-800 z-20"><Terminal size={16}/> 核心代码</h3>
                <div className="font-mono text-xs space-y-4 whitespace-pre-wrap">
                    <div className="p-4 bg-slate-800/50 rounded border border-slate-700">

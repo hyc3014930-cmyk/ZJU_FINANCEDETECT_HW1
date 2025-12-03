@@ -32,41 +32,45 @@ export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) =>
   };
 
   useEffect(() => {
-    // If we enter 'idle', reset everything
-    if (batchStatus === 'idle') {
-      clearTimers();
-      setActiveItem(-1);
-      setProcessedItems([]);
-    }
-    
     // Cleanup on unmount
     return () => clearTimers();
-  }, [batchStatus]);
+  }, []);
 
-  // Handle running logic separately to avoid effect re-trigger loops
+  // Handle Reset separately
+  const handleBatchReset = () => {
+      clearTimers();
+      setBatchStatus('idle');
+      setActiveItem(-1);
+      setProcessedItems([]);
+  };
+
   const startBatchProcess = () => {
+      // Clear any existing runs first
+      clearTimers();
+      
       setBatchStatus('running');
       setProcessedItems([]);
+      setActiveItem(-1);
       
       let currentIndex = 0;
       
       const processNext = () => {
-          // Safety check: if user hit stop/reset or component unmounted
+          // Check if user hit reset or component unmounted (ref checking implied by timeout clearance)
           if (currentIndex >= batchItems.length) {
               setBatchStatus('finished');
               setActiveItem(-1);
               return;
           }
 
-          // 1. Set Active
+          // 1. Set Active Item (Accelerated)
           setActiveItem(currentIndex);
 
-          // 2. Simulate API Call (Accelerated: 300ms)
+          // 2. Simulate API Call (300ms)
           const t1 = window.setTimeout(() => {
               setProcessedItems(prev => [...prev, currentIndex]);
               currentIndex++;
               
-              // 3. Rate Limit Sleep (Accelerated: 200ms)
+              // 3. Rate Limit Sleep (200ms)
               const t2 = window.setTimeout(() => {
                   processNext();
               }, 200); 
@@ -76,6 +80,7 @@ export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) =>
           timersRef.current.push(t1);
       };
 
+      // Start the chain
       processNext();
   };
 
@@ -228,14 +233,14 @@ export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) =>
         </div>
 
         {/* Right: Code - Mobile optimized split view */}
-        <div className="w-full lg:w-[450px] h-[45vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
+        <div className="w-full lg:w-[450px] h-[40vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
             <h3 className="text-emerald-400 font-bold mb-4 flex items-center gap-2 sticky top-0 bg-slate-900 py-2 border-b border-slate-800 z-20">
                <Terminal size={16} /> 源代码解析
             </h3>
             <div className="space-y-6 font-mono text-xs leading-relaxed whitespace-pre-wrap">
                 {/* parse_response function */}
                 <div className={`p-4 rounded-lg border transition-all duration-500 ${promptStep === 3 ? 'bg-emerald-900/30 border-emerald-500/50' : 'bg-slate-800/50 border-slate-700'}`}>
-                   <div className="text-slate-500 mb-2 font-bold flex items-center gap-2"><FileJson size={12}/> 核心解析逻辑</div>
+                   <div className="text-slate-500 mb-2 font-bold flex items-center gap-2"><FileJson size={12}/> 核心解析逻辑 (Regex)</div>
                    <code className="block text-yellow-200 mb-1">def parse_response(content):</code>
                    <div className="pl-4 border-l border-slate-700/50">
                        <code className="block text-slate-500 mb-1"># 1. 正则匹配 JSON 代码块</code>
@@ -305,21 +310,19 @@ export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) =>
                         <div className="text-xs text-slate-400">Total: {batchItems.length} items</div>
                     </div>
                     <div className="flex gap-2">
-                        {batchStatus !== 'idle' && (
-                             <button 
-                                onClick={() => setBatchStatus('idle')}
-                                className="bg-slate-100 text-slate-600 px-3 py-2 rounded-lg font-bold hover:bg-slate-200 text-xs lg:text-sm"
-                            >
-                                <RotateCcw size={16}/>
-                            </button>
-                        )}
+                         <button 
+                            onClick={handleBatchReset}
+                            className="bg-slate-100 text-slate-600 px-3 py-2 rounded-lg font-bold hover:bg-slate-200 text-xs lg:text-sm flex items-center gap-1"
+                        >
+                            <RotateCcw size={16}/> Reset
+                        </button>
                         <button 
                             onClick={startBatchProcess}
-                            disabled={batchStatus === 'running'}
+                            disabled={batchStatus === 'running' || batchStatus === 'finished'}
                             className="bg-emerald-600 text-white px-4 lg:px-6 py-2 rounded-lg font-bold shadow hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2 text-xs lg:text-sm"
                         >
                             {batchStatus === 'running' ? <Loader2 className="animate-spin"/> : <Play size={16}/>}
-                            {batchStatus === 'running' ? 'Processing...' : 'Run Batch'}
+                            {batchStatus === 'running' ? 'Running...' : 'Start Batch'}
                         </button>
                     </div>
                 </div>
@@ -386,8 +389,8 @@ export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) =>
 
             </div>
 
-             {/* Code Panel */}
-            <div className="w-full lg:w-[450px] h-[45vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
+             {/* Code Panel - Fixed bottom on mobile */}
+            <div className="w-full lg:w-[450px] h-[40vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
                 <h3 className="text-emerald-400 font-bold mb-4 flex items-center gap-2 sticky top-0 bg-slate-900 py-2 border-b border-slate-800 z-20">
                 <Terminal size={16} /> 源代码解析
                 </h3>
@@ -522,8 +525,8 @@ export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) =>
                </div>
            </div>
            
-            {/* Code Panel */}
-            <div className="w-full lg:w-[450px] h-[45vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
+            {/* Code Panel - Fixed bottom on mobile */}
+            <div className="w-full lg:w-[450px] h-[40vh] lg:h-auto bg-slate-900 text-slate-300 p-4 lg:p-6 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-700 flex-shrink-0 z-10 custom-scrollbar shadow-[0_-5px_15px_rgba(0,0,0,0.3)] lg:shadow-none">
                 <h3 className="text-emerald-400 font-bold mb-4 flex items-center gap-2 sticky top-0 bg-slate-900 py-2 border-b border-slate-800 z-20">
                 <Terminal size={16} /> 源代码解析
                 </h3>
