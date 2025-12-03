@@ -1,166 +1,177 @@
 import React, { useState } from 'react';
-import { Database, Brain, Activity, Search, Code, Layers, BookOpen } from 'lucide-react';
-import { TabView } from './types';
+import { Database, Brain, Activity, Search, Code, Layers, BookOpen, MessageSquare, Scale, Image as ImageIcon, Box, LayoutGrid, Zap, ScanLine, ListVideo, Calculator } from 'lucide-react';
+import { TabView, Project } from './types';
 import { DataView } from './components/DataView';
 import { ModelView } from './components/ModelView';
 import { TrainingView } from './components/TrainingView';
 import { InferenceView } from './components/InferenceView';
 import { IntroView } from './components/IntroView';
+import { TcmView } from './components/TcmView';
+import { VisionView } from './components/VisionView';
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabView>(TabView.INTRO);
+  const [currentProject, setCurrentProject] = useState<Project>(Project.DGRAPH);
+  const [activeTab, setActiveTab] = useState<string>(TabView.INTRO);
+
+  // Switch project handler
+  const handleProjectSwitch = (p: Project) => {
+    setCurrentProject(p);
+    // Set default tab for each project
+    if (p === Project.DGRAPH) setActiveTab(TabView.INTRO);
+    if (p === Project.TCM) setActiveTab(TabView.TCM_INTRO);
+    if (p === Project.VISION) setActiveTab(TabView.CV_INTRO);
+  };
 
   const renderContent = () => {
-    switch (activeTab) {
-      case TabView.INTRO:
-        return <IntroView />;
-      case TabView.DATA:
-        return <DataView />;
-      case TabView.MODEL:
-        return <ModelView />;
-      case TabView.TRAINING:
-        return <TrainingView />;
-      case TabView.INFERENCE:
-        return <InferenceView />;
-      default:
-        return <IntroView />;
+    // 1. DGraph (Finance)
+    if (currentProject === Project.DGRAPH) {
+        switch (activeTab) {
+        case TabView.INTRO: return <IntroView />;
+        case TabView.DATA: return <DataView />;
+        case TabView.MODEL: return <ModelView />;
+        case TabView.TRAINING: return <TrainingView />;
+        case TabView.INFERENCE: return <InferenceView />;
+        default: return <IntroView />;
+        }
     }
+    // 2. TCM (LLM)
+    if (currentProject === Project.TCM) {
+        return <TcmView activeSubTab={activeTab} />;
+    }
+    // 3. Vision (CV)
+    if (currentProject === Project.VISION) {
+        return <VisionView activeSubTab={activeTab} />;
+    }
+    return null;
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-600 p-2 rounded-lg text-white shadow-lg shadow-blue-200">
-              <Code size={24} />
-            </div>
+    <div className="min-h-screen bg-slate-100 text-slate-900 flex font-sans overflow-hidden">
+      
+      {/* 1. Global Project Sidebar (Leftmost) */}
+      <aside className="w-20 bg-slate-900 flex flex-col items-center py-6 gap-6 z-20 shadow-xl flex-shrink-0">
+         <div className="bg-blue-600 p-3 rounded-xl text-white shadow-lg shadow-blue-900/50 mb-4">
+             <Code size={24} />
+         </div>
+         
+         <ProjectIcon 
+            active={currentProject === Project.DGRAPH} 
+            onClick={() => handleProjectSwitch(Project.DGRAPH)}
+            icon={<LayoutGrid size={24} />}
+            label="Finance"
+            color="text-blue-400"
+         />
+         <ProjectIcon 
+            active={currentProject === Project.TCM} 
+            onClick={() => handleProjectSwitch(Project.TCM)}
+            icon={<MessageSquare size={24} />}
+            label="TCM-LLM"
+            color="text-emerald-400"
+         />
+         <ProjectIcon 
+            active={currentProject === Project.VISION} 
+            onClick={() => handleProjectSwitch(Project.VISION)}
+            icon={<ImageIcon size={24} />}
+            label="Vision"
+            color="text-cyan-400"
+         />
+      </aside>
+
+      {/* 2. Project Navigation Sidebar & Main Content */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        {/* Header */}
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0">
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-800">
-                DGraphFin 代码可视化助手
-              </h1>
-              <div className="text-xs text-slate-500">
-                基于 MLP (多层感知机) 的金融欺诈检测
-              </div>
+                <h1 className="text-lg font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                    {currentProject === Project.DGRAPH && <><LayoutGrid size={20} className="text-blue-600"/> DGraphFin 金融风控模型</>}
+                    {currentProject === Project.TCM && <><Brain size={20} className="text-emerald-600"/> TCM 中医大模型助手</>}
+                    {currentProject === Project.VISION && <><Box size={20} className="text-cyan-600"/> Garbage 垃圾分类视觉模型</>}
+                </h1>
             </div>
-          </div>
-          <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
-            <Brain size={14} />
-            <span>AI 零基础模式</span>
-          </div>
-        </div>
-      </header>
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
+                <Activity size={14} />
+                <span>AI Teaching Platform v2.1</span>
+            </div>
+        </header>
 
-      {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          
-          {/* Sidebar Navigation */}
-          <nav className="lg:w-72 flex-shrink-0 space-y-3">
-             <NavButton 
-              active={activeTab === TabView.INTRO} 
-              onClick={() => setActiveTab(TabView.INTRO)}
-              icon={<BookOpen size={20} />}
-              label="0. 项目背景 (Context)"
-              description="金融反欺诈与 DGraph 数据集"
-              colorClass="slate"
-            />
-            <NavButton 
-              active={activeTab === TabView.DATA} 
-              onClick={() => setActiveTab(TabView.DATA)}
-              icon={<Database size={20} />}
-              label="1. 数据准备 (Data)"
-              description="加载数据、归一化与分组"
-              colorClass="blue"
-            />
-            <NavButton 
-              active={activeTab === TabView.MODEL} 
-              onClick={() => setActiveTab(TabView.MODEL)}
-              icon={<Layers size={20} />}
-              label="2. 模型架构 (Model)"
-              description="搭建 MLP 神经网络的大脑"
-              colorClass="purple"
-            />
-            <NavButton 
-              active={activeTab === TabView.TRAINING} 
-              onClick={() => setActiveTab(TabView.TRAINING)}
-              icon={<Activity size={20} />}
-              label="3. 训练循环 (Train)"
-              description="通过 200 轮练习优化模型"
-              colorClass="green"
-            />
-            <NavButton 
-              active={activeTab === TabView.INFERENCE} 
-              onClick={() => setActiveTab(TabView.INFERENCE)}
-              icon={<Search size={20} />}
-              label="4. 预测推理 (Predict)"
-              description="判断用户是正常还是欺诈"
-              colorClass="amber"
-            />
+        {/* Workspace */}
+        <div className="flex-1 flex overflow-hidden">
             
-            <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
-              <h4 className="text-blue-800 font-bold text-sm mb-2">💡 什么是 MLP?</h4>
-              <p className="text-xs text-blue-700 leading-relaxed">
-                全称 Multi-Layer Perceptron (多层感知机)。把它想象成一个由很多层“神经元”组成的筛选器。数据进去，经过层层加权计算，最后输出分类结果。
-              </p>
-            </div>
-          </nav>
+            {/* Sub-Navigation Sidebar */}
+            <nav className="w-64 bg-white border-r border-slate-200 p-4 flex flex-col gap-2 overflow-y-auto flex-shrink-0">
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Menu</div>
+                
+                {currentProject === Project.DGRAPH && (
+                    <>
+                        <NavButton active={activeTab === TabView.INTRO} onClick={() => setActiveTab(TabView.INTRO)} icon={<BookOpen size={18} />} label="0. 项目背景" />
+                        <NavButton active={activeTab === TabView.DATA} onClick={() => setActiveTab(TabView.DATA)} icon={<Database size={18} />} label="1. 数据准备" />
+                        <NavButton active={activeTab === TabView.MODEL} onClick={() => setActiveTab(TabView.MODEL)} icon={<Layers size={18} />} label="2. MLP 模型架构" />
+                        <NavButton active={activeTab === TabView.TRAINING} onClick={() => setActiveTab(TabView.TRAINING)} icon={<Activity size={18} />} label="3. 训练循环" />
+                        <NavButton active={activeTab === TabView.INFERENCE} onClick={() => setActiveTab(TabView.INFERENCE)} icon={<Search size={18} />} label="4. 预测推理" />
+                    </>
+                )}
 
-          {/* Interactive Viewport */}
-          <div className="flex-1 bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden min-h-[600px] flex flex-col">
-            {renderContent()}
-          </div>
+                {currentProject === Project.TCM && (
+                    <>
+                        <NavButton active={activeTab === TabView.TCM_INTRO} onClick={() => setActiveTab(TabView.TCM_INTRO)} icon={<BookOpen size={18} />} label="0. 项目背景" />
+                        <NavButton active={activeTab === TabView.TCM_PROMPT} onClick={() => setActiveTab(TabView.TCM_PROMPT)} icon={<MessageSquare size={18} />} label="1. 提示工程 (Prompt)" />
+                        <NavButton active={activeTab === TabView.TCM_BATCH} onClick={() => setActiveTab(TabView.TCM_BATCH)} icon={<ListVideo size={18} />} label="2. 批量处理 (Batch)" />
+                        <NavButton active={activeTab === TabView.TCM_EVAL} onClick={() => setActiveTab(TabView.TCM_EVAL)} icon={<Calculator size={18} />} label="3. 效果评估 (Score)" />
+                    </>
+                )}
+
+                {currentProject === Project.VISION && (
+                    <>
+                        <NavButton active={activeTab === TabView.CV_INTRO} onClick={() => setActiveTab(TabView.CV_INTRO)} icon={<BookOpen size={18} />} label="0. 项目背景" />
+                        <NavButton active={activeTab === TabView.CV_PIPELINE} onClick={() => setActiveTab(TabView.CV_PIPELINE)} icon={<ScanLine size={18} />} label="1. 图像流水线" />
+                        <NavButton active={activeTab === TabView.CV_ARCH} onClick={() => setActiveTab(TabView.CV_ARCH)} icon={<Layers size={18} />} label="2. MobileNet 架构" />
+                        <NavButton active={activeTab === TabView.CV_TRAIN} onClick={() => setActiveTab(TabView.CV_TRAIN)} icon={<Zap size={18} />} label="3. 迁移训练 & LR" />
+                        <NavButton active={activeTab === TabView.CV_INFERENCE} onClick={() => setActiveTab(TabView.CV_INFERENCE)} icon={<Search size={18} />} label="4. 预测推理" />
+                    </>
+                )}
+            </nav>
+
+            {/* Viewport */}
+            <main className="flex-1 bg-slate-50 relative overflow-hidden flex flex-col">
+                <div className="flex-1 overflow-hidden">
+                    {renderContent()}
+                </div>
+            </main>
+
         </div>
-      </main>
+      </div>
     </div>
   );
 };
 
-interface NavButtonProps {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-  colorClass: 'blue' | 'purple' | 'green' | 'amber' | 'slate';
-}
+// --- Sub Components ---
 
-const NavButton: React.FC<NavButtonProps> = ({ active, onClick, icon, label, description, colorClass }) => {
-  const activeStyles = {
-    blue: 'bg-blue-600 shadow-blue-200',
-    purple: 'bg-purple-600 shadow-purple-200',
-    green: 'bg-emerald-600 shadow-emerald-200',
-    amber: 'bg-amber-600 shadow-amber-200',
-    slate: 'bg-slate-800 shadow-slate-300',
-  };
+const ProjectIcon: React.FC<{ active: boolean, onClick: () => void, icon: React.ReactNode, label: string, color: string }> = ({ active, onClick, icon, label, color }) => (
+    <button 
+       onClick={onClick}
+       className={`w-12 h-12 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group relative ${active ? 'bg-slate-800' : 'hover:bg-slate-800/50'}`}
+    >
+        <div className={`transition-colors ${active ? color : 'text-slate-500 group-hover:text-slate-300'}`}>
+            {icon}
+        </div>
+        <span className={`text-[9px] font-bold ${active ? 'text-white' : 'text-slate-500'}`}>{label}</span>
+        {active && <div className={`absolute left-0 w-1 h-8 rounded-r-full ${color.replace('text', 'bg')}`}></div>}
+    </button>
+);
 
-  const textActiveStyles = {
-    blue: 'text-blue-100',
-    purple: 'text-purple-100',
-    green: 'text-emerald-100',
-    amber: 'text-amber-100',
-    slate: 'text-slate-200',
-  };
-
-  return (
+const NavButton: React.FC<{ active: boolean, onClick: () => void, icon: React.ReactNode, label: string }> = ({ active, onClick, icon, label }) => (
     <button
       onClick={onClick}
-      className={`w-full text-left px-5 py-4 rounded-xl transition-all duration-300 flex items-center gap-4 group relative overflow-hidden ${
+      className={`w-full text-left px-3 py-3 rounded-lg flex items-center gap-3 transition-all ${
         active 
-          ? `${activeStyles[colorClass]} text-white shadow-lg scale-[1.02]` 
-          : 'bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
+          ? 'bg-slate-100 text-slate-900 font-bold shadow-sm' 
+          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
       }`}
     >
-      <div className={`relative z-10 transition-transform duration-300 ${active ? 'scale-110' : 'group-hover:scale-110'}`}>
-        {icon}
-      </div>
-      <div className="relative z-10">
-        <div className={`font-bold text-sm mb-0.5 ${active ? 'text-white' : 'text-slate-800'}`}>{label}</div>
-        <div className={`text-xs ${active ? textActiveStyles[colorClass] : 'text-slate-500'}`}>{description}</div>
-      </div>
+      <div className={active ? 'text-blue-600' : 'text-slate-400'}>{icon}</div>
+      <span className="text-sm">{label}</span>
     </button>
-  );
-};
+);
 
 export default App;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layers, Zap, FileCode, MousePointer2, Book, Code2, Calculator, ArrowRight, Activity, TrendingDown } from 'lucide-react';
+import { Layers, Zap, Code2, Calculator, MousePointer2, TrendingDown, Activity } from 'lucide-react';
 
 export const ModelView: React.FC = () => {
   const [hoveredPart, setHoveredPart] = useState<string | null>(null);
@@ -264,38 +264,37 @@ export const ModelView: React.FC = () => {
                        />
                     </div>
 
-                    {/* Visualization Graph (Fixed Coordinates) */}
+                    {/* Visualization Graph */}
                     <div className="relative h-40 bg-slate-900 rounded border border-slate-700 overflow-hidden flex items-center justify-center">
-                        {/* Axes */}
-                        <div className="absolute w-full h-[1px] bg-slate-600 bottom-[20px]"></div> {/* X Axis (at y=0) */}
-                        <div className="absolute h-full w-[1px] bg-slate-600 left-1/2"></div> {/* Y Axis (at x=0) */}
-                        <div className="absolute left-1/2 bottom-[5px] -translate-x-1/2 text-[9px] text-slate-500">0</div>
+                        {/* Grid Lines */}
+                        <div className="absolute w-full h-[1px] bg-slate-600 bottom-5"></div> {/* X Axis */}
+                        <div className="absolute h-full w-[1px] bg-slate-600 left-1/2"></div> {/* Y Axis */}
+                        <div className="absolute left-1/2 bottom-1 -translate-x-1/2 text-[9px] text-slate-500">0</div>
                         
-                        {/* SVG Path. ViewBox: 0 0 100 100. 
-                            X: -10 to 10 -> 0 to 100. (x=0 is 50)
-                            Y: -2 to 10 -> 100 to 0. (y=0 is 83 roughly)
-                            Let's map Y: 0 to 10. Container h-40 is approx 160px.
-                            Let's use 20px padding bottom for axis.
-                            Graph Area: Top 140px.
-                            Max value 10 -> top 0px.
-                            Value 0 -> top 140px.
-                        */}
-                        <svg className="absolute inset-0 w-full h-[calc(100%-20px)] pointer-events-none" preserveAspectRatio="none" viewBox="-10 0 20 10">
-                             {/* Flip Y axis for SVG: scale(1, -1) and translate? easier to just map coords manually */}
-                             <path d="M -10 0 L 0 0 L 10 10" stroke="#a855f7" strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" transform="scale(1, -1) translate(0, -10)" />
-                             {/* Manual points for viewBox="-10 0 20 10" where y goes up? No standard SVG y goes down.
-                                 Let's stick to percentages for the div dot.
-                             */}
-                        </svg>
-                        
-                        {/* Simpler SVG approach for line */}
-                        <svg className="absolute top-0 left-0 w-full h-[calc(100%-20px)] pointer-events-none">
-                            <polyline points="0,140 160,140 320,0" fill="none" stroke="#a855f7" strokeWidth="2" vectorEffect="non-scaling-stroke" style={{ width: '100%', height: '100%' }} />
-                            {/* Note: This assumes container width is roughly 320px. But it's fluid.
-                                Safer to use vector-effect or percentage based line.
+                        {/* Graph Line */}
+                        <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                            {/* ReLU Function: Flat from x=0 to 50%, then linear up to 100%,0% */}
+                            {/* 
+                                Viewport mapping:
+                                X: 0% -> -10, 50% -> 0, 100% -> 10
+                                Y: Bottom 20px (0), Top 0px (10)
+                                Line Segment 1: x=0% to x=50%, y = bottom 20px (Val 0)
+                                Line Segment 2: x=50% to x=100%, y goes from bottom 20px to top 0px
                             */}
-                            <line x1="0%" y1="100%" x2="50%" y2="100%" stroke="#a855f7" strokeWidth="2" />
-                            <line x1="50%" y1="100%" x2="100%" y2="0%" stroke="#a855f7" strokeWidth="2" />
+                            <polyline 
+                                points="0,140 160,140 320,0" 
+                                fill="none" 
+                                stroke="#a855f7" 
+                                strokeWidth="2" 
+                                vectorEffect="non-scaling-stroke" 
+                                className="w-full h-full"
+                            />
+                            {/* Note: SVG coordinates can be tricky with responsive width. 
+                                Using a safer 2-line approach with percentages. 
+                                The container height is h-40 (160px). Bottom 20px is y=140. Top is y=0.
+                            */}
+                            <line x1="0%" y1="calc(100% - 20px)" x2="50%" y2="calc(100% - 20px)" stroke="#a855f7" strokeWidth="2" />
+                            <line x1="50%" y1="calc(100% - 20px)" x2="100%" y2="0%" stroke="#a855f7" strokeWidth="2" />
                         </svg>
 
                         {/* The Point */}
@@ -303,23 +302,23 @@ export const ModelView: React.FC = () => {
                            className="absolute w-3 h-3 bg-white rounded-full border-2 border-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)] transition-all duration-75 z-10"
                            style={{
                               /* 
-                                 Input Range: -10 to 10. 
-                                 Left: -10 -> 0%, 10 -> 100%. Formula: (val + 10) / 20 * 100%
-                                 Top (Y): 
-                                    Height is h-40 approx. But let's use the calc(100% - 20px) area.
-                                    If val <= 0: y=0 (Bottom of graph area).
-                                    If val > 0: y=val. Max val 10.
-                                    Top % = (1 - val/10) * 100%
+                                 Left: Map -10~10 to 0%~100%. Formula: (val + 10) / 20 * 100%
+                                 Bottom: 
+                                    Baseline is 20px. 
+                                    Max Height above baseline is 100% - 20px.
+                                    Val 0 -> Bottom 20px.
+                                    Val 10 -> Bottom 100%.
+                                    Fraction = val / 10.
                               */
                               left: `calc(${((reluInput + 10) / 20) * 100}% - 6px)`,
-                              top: reluInput > 0 
-                                ? `calc(${(1 - reluInput/10)} * (100% - 20px) - 6px)` 
-                                : `calc(100% - 20px - 6px)` 
+                              bottom: reluInput > 0 
+                                ? `calc(20px + ${(reluInput/10)} * (100% - 20px) - 6px)` 
+                                : `calc(20px - 6px)` 
                            }}
                         ></div>
                         
                         {/* Result Display */}
-                        <div className="absolute top-2 left-2 text-xs font-mono bg-slate-800 px-2 py-1 rounded border border-slate-600">
+                        <div className="absolute top-2 left-2 text-xs font-mono bg-slate-800 px-2 py-1 rounded border border-slate-600 z-20">
                            Output: <span className={reluInput > 0 ? "text-emerald-400" : "text-rose-400"}>{Math.max(0, reluInput).toFixed(1)}</span>
                         </div>
                     </div>
@@ -357,14 +356,43 @@ export const ModelView: React.FC = () => {
                     </div>
 
                     <div className="relative h-40 bg-slate-900 rounded border border-slate-700 overflow-hidden">
-                         {/* Graph y = x^2. x range -3 to 3. y range 0 to 9. */}
+                         {/* Graph y = w^2. w range -3 to 3. Loss range 0 to 9. */}
                          <svg className="absolute inset-0 w-full h-full" viewBox="-3 0 6 9" preserveAspectRatio="none">
+                             {/* Note on SVG Coords:
+                                viewBox="-3 0 6 9"
+                                X: -3 (Left) to 3 (Right)
+                                Y: 0 (Top) to 9 (Bottom)
+                                We want Loss=0 at Bottom (SVG Y=9). Loss=9 at Top (SVG Y=0).
+                                
+                                Path Points:
+                                (-3, 9) -> Loss (-3)^2 = 9. Map to Top. SVG Y = 0. Point: -3, 0.
+                                (0, 0)  -> Loss 0. Map to Bottom. SVG Y = 9. Point: 0, 9.
+                                (3, 9)  -> Loss 9. Map to Top. SVG Y = 0. Point: 3, 0.
+                                
+                                Quadratic Bezier Q Control Point:
+                                To get vertex at (0,9) from (-3,0) and (3,0).
+                                Midpoint t=0.5. Y = 0.25*0 + 0.5*Cy + 0.25*0 = 0.5*Cy.
+                                We want Y=9. So 0.5*Cy = 9 => Cy = 18.
+                                Control Point: (0, 18).
+                             */}
+                             
                              {/* Grid */}
                              <line x1="0" y1="0" x2="0" y2="9" stroke="#334155" strokeWidth="0.05" />
-                             {/* Curve */}
-                             <path d="M -3 9 Q 0 0 3 9" fill="none" stroke="#60a5fa" strokeWidth="0.1" vectorEffect="non-scaling-stroke" />
+                             
+                             {/* Curve: Valley Shape */}
+                             <path d="M -3 0 Q 0 18 3 0" fill="none" stroke="#60a5fa" strokeWidth="0.1" vectorEffect="non-scaling-stroke" />
+                             
                              {/* Ball */}
-                             <circle cx={w} cy={w*w} r="0.2" fill="#f43f5e" className="transition-all duration-300" />
+                             {/* 
+                                cx = w. 
+                                cy = Loss mapped to SVG Y.
+                                Loss = w*w. 
+                                SVG Y = 9 - w*w. (Since 0 is top, 9 is bottom, we invert).
+                                Wait, based on the Path calculation above:
+                                Loss 9 -> Y=0. Loss 0 -> Y=9.
+                                SVG Y = 9 - Loss.
+                             */}
+                             <circle cx={w} cy={9 - w*w} r="0.2" fill="#f43f5e" className="transition-all duration-300" />
                          </svg>
                          <div className="absolute bottom-2 right-2 font-mono text-[10px] bg-slate-800/80 px-2 py-1 rounded text-slate-300">
                              Loss: {(w*w).toFixed(4)}

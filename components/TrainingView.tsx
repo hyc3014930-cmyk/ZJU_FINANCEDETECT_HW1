@@ -74,72 +74,74 @@ export const TrainingView: React.FC = () => {
   const currentDetail = stepDetails[step as keyof typeof stepDetails];
 
   return (
-    <div className="h-full flex flex-col animate-fade-in-up">
-      <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+    <div className="h-full flex flex-col animate-fade-in-up overflow-hidden">
+      <div className="p-4 lg:p-6 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 flex-shrink-0 z-10">
         <div>
-           <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-             <Activity className="text-green-600" /> 第三步：训练循环 (Training Loop)
+           <h2 className="text-xl lg:text-2xl font-bold text-slate-800 flex items-center gap-2">
+             <Activity className="text-green-600" /> 第三步：训练循环
            </h2>
-           <p className="text-slate-600 mt-2 text-sm">
+           <p className="text-slate-600 mt-1 text-xs lg:text-sm">
              观察右侧代码高亮，理解每一次“迭代”机器都做了什么。
            </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full sm:w-auto">
            <button 
              onClick={() => setIsRunning(!isRunning)} 
-             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-colors ${isRunning ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-green-600 text-white shadow-lg shadow-green-200 hover:bg-green-700'}`}
+             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-bold transition-colors text-xs lg:text-sm ${isRunning ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-green-600 text-white shadow-lg shadow-green-200 hover:bg-green-700'}`}
            >
-              {isRunning ? <Pause size={18} /> : <Play size={18} />}
-              {isRunning ? '暂停讲解' : '开始训练'}
+              {isRunning ? <Pause size={16} /> : <Play size={16} />}
+              {isRunning ? '暂停' : '开始训练'}
            </button>
-           <button onClick={handleReset} className="flex items-center gap-2 bg-white text-slate-600 border border-slate-200 px-4 py-2 rounded-lg font-bold hover:bg-slate-50 transition-colors">
-              <RotateCcw size={18} /> 重置
+           <button onClick={handleReset} className="flex-none flex items-center justify-center gap-2 bg-white text-slate-600 border border-slate-200 px-4 py-2 rounded-lg font-bold hover:bg-slate-50 transition-colors text-xs lg:text-sm">
+              <RotateCcw size={16} />
            </button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
+      <div className="flex-1 overflow-hidden flex flex-col lg:flex-row min-h-0">
          
          {/* Left: Dashboard Visualization */}
-         <div className="flex-1 bg-slate-50/30 p-4 lg:p-8 flex flex-col gap-8 items-center justify-start overflow-y-auto">
+         {/* FIX: Added min-h-0 and overflow-y-auto to ensure scrolling works on mobile if content overflows */}
+         <div className="flex-1 bg-slate-50/30 p-4 lg:p-8 flex flex-col gap-6 items-center justify-start overflow-y-auto min-h-0 relative">
             
             {/* 1. Status Cycle */}
-            <div className="relative w-64 h-64 flex-shrink-0 mt-4 select-none">
+            <div className="relative w-48 h-48 lg:w-64 lg:h-64 flex-shrink-0 mt-2 select-none scale-90 lg:scale-100 z-0">
                {/* Base Circle */}
                <div className="absolute inset-0 rounded-full border-[10px] border-slate-200"></div>
                
                {/* Step 1: Forward */}
                <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 flex flex-col items-center transition-all duration-500 ${step === 1 ? 'scale-110 opacity-100 z-10' : 'opacity-40 scale-90 grayscale'}`}>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 1 ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-400'}`}>1</div>
-                  <div className="bg-white border px-2 py-1 rounded mt-2 text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">前向传播</div>
+                  <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 1 ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-400'}`}>1</div>
+                  <div className="bg-white border px-2 py-1 rounded mt-2 text-[10px] lg:text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">前向传播</div>
                </div>
 
                {/* Step 2: Loss */}
                <div className={`absolute right-0 top-1/2 translate-x-4 -translate-y-1/2 flex flex-col items-center transition-all duration-500 ${step === 2 ? 'scale-110 opacity-100 z-10' : 'opacity-40 scale-90 grayscale'}`}>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 2 ? 'bg-rose-600 ring-4 ring-rose-100' : 'bg-slate-400'}`}>2</div>
-                  <div className="bg-white border px-2 py-1 rounded mt-2 text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">计算 Loss</div>
+                  <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 2 ? 'bg-rose-600 ring-4 ring-rose-100' : 'bg-slate-400'}`}>2</div>
+                  <div className="bg-white border px-2 py-1 rounded mt-2 text-[10px] lg:text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">计算 Loss</div>
                </div>
 
                {/* Step 3: Backward */}
                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 flex flex-col-reverse items-center transition-all duration-500 ${step === 3 ? 'scale-110 opacity-100 z-10' : 'opacity-40 scale-90 grayscale'}`}>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 3 ? 'bg-amber-500 ring-4 ring-amber-100' : 'bg-slate-400'}`}>3</div>
-                  <div className="bg-white border px-2 py-1 rounded mb-2 text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">反向传播</div>
+                  <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 3 ? 'bg-amber-500 ring-4 ring-amber-100' : 'bg-slate-400'}`}>3</div>
+                  <div className="bg-white border px-2 py-1 rounded mb-2 text-[10px] lg:text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">反向传播</div>
                </div>
 
                {/* Step 4: Optimizer */}
                <div className={`absolute left-0 top-1/2 -translate-x-4 -translate-y-1/2 flex flex-col items-center transition-all duration-500 ${step === 4 ? 'scale-110 opacity-100 z-10' : 'opacity-40 scale-90 grayscale'}`}>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 4 ? 'bg-purple-600 ring-4 ring-purple-100' : 'bg-slate-400'}`}>4</div>
-                  <div className="bg-white border px-2 py-1 rounded mt-2 text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">参数更新</div>
+                  <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${step === 4 ? 'bg-purple-600 ring-4 ring-purple-100' : 'bg-slate-400'}`}>4</div>
+                  <div className="bg-white border px-2 py-1 rounded mt-2 text-[10px] lg:text-xs font-bold text-slate-600 whitespace-nowrap shadow-sm">参数更新</div>
                </div>
                
                {/* Central Info */}
                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-5xl font-black text-slate-800 tracking-tighter">{epoch}</div>
-                  <div className="text-xs uppercase tracking-widest text-slate-400 font-bold mt-1">Epochs</div>
+                  <div className="text-4xl lg:text-5xl font-black text-slate-800 tracking-tighter">{epoch}</div>
+                  <div className="text-[10px] lg:text-xs uppercase tracking-widest text-slate-400 font-bold mt-1">Epochs</div>
                </div>
             </div>
 
             {/* 2. Educational Concept Card (The "Why") */}
+            {/* FIX: Removed flex-shrink-0 to allow scrolling if needed, added w-full */}
             <div className="w-full max-w-lg bg-white rounded-xl border border-slate-200 shadow-lg overflow-hidden transition-all duration-500">
                <div className={`px-4 py-3 border-b flex items-center gap-2 ${
                   step === 1 ? 'bg-blue-50 border-blue-100 text-blue-800' :
@@ -151,8 +153,8 @@ export const TrainingView: React.FC = () => {
                   <BookOpen size={18} />
                   <span className="font-bold text-sm">{currentDetail.title}</span>
                </div>
-               <div className="p-5">
-                  <p className="text-slate-600 text-sm mb-4 leading-relaxed font-medium whitespace-pre-line">
+               <div className="p-4 lg:p-5">
+                  <p className="text-slate-600 text-xs lg:text-sm mb-4 leading-relaxed font-medium whitespace-pre-line">
                      {currentDetail.desc}
                   </p>
                   <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-100 flex gap-3">
@@ -166,12 +168,12 @@ export const TrainingView: React.FC = () => {
             </div>
 
             {/* 3. Metrics */}
-            <div className="flex gap-4 w-full max-w-lg">
+            <div className="flex gap-4 w-full max-w-lg pb-6 flex-shrink-0">
                <div className="flex-1 bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                   <div>
                      <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">Training Loss</div>
                      <div className="flex items-center gap-2">
-                        <div className="text-xl font-mono font-bold text-rose-600">{loss.toFixed(4)}</div>
+                        <div className="text-lg lg:text-xl font-mono font-bold text-rose-600">{loss.toFixed(4)}</div>
                         <TrendingDown size={14} className="text-rose-500 animate-pulse"/>
                      </div>
                   </div>
@@ -181,7 +183,7 @@ export const TrainingView: React.FC = () => {
                    <div>
                      <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">AUC (Accuracy)</div>
                      <div className="flex items-center gap-2">
-                        <div className="text-xl font-mono font-bold text-emerald-600">{(acc * 100).toFixed(1)}%</div>
+                        <div className="text-lg lg:text-xl font-mono font-bold text-emerald-600">{(acc * 100).toFixed(1)}%</div>
                         <TrendingUp size={14} className="text-emerald-500 animate-pulse"/>
                      </div>
                   </div>
@@ -192,13 +194,14 @@ export const TrainingView: React.FC = () => {
          </div>
 
          {/* Right: Code Panel with Active Highlighting */}
-         <div className="w-full lg:w-[500px] bg-slate-900 border-l border-slate-700 flex flex-col shadow-2xl h-[600px] lg:h-auto">
-             <div className="p-3 border-b border-slate-700 flex items-center gap-2 text-slate-400 bg-slate-900 z-10">
+         {/* FIX: Set height to 45vh on mobile to ensure it's visible without overlapping */}
+         <div className="w-full lg:w-[500px] bg-slate-900 border-t lg:border-t-0 lg:border-l border-slate-700 flex flex-col shadow-2xl h-[45vh] lg:h-auto flex-shrink-0 z-20">
+             <div className="p-3 border-b border-slate-700 flex items-center gap-2 text-slate-400 bg-slate-900 z-10 flex-shrink-0 sticky top-0">
                 <FileCode size={16} />
                 <span className="text-sm font-bold">main.py (训练部分)</span>
              </div>
              
-             <div className="flex-1 overflow-y-auto p-4 font-mono text-xs leading-loose relative custom-scrollbar">
+             <div className="flex-1 overflow-y-auto p-4 font-mono text-xs leading-loose relative custom-scrollbar whitespace-nowrap lg:whitespace-normal">
                 
                 <code className="block text-slate-500 mb-2"># 1. 定义评估器和优化器</code>
                 <code className="block text-slate-300">evaluator = Evaluator('auc')</code>
@@ -209,32 +212,32 @@ export const TrainingView: React.FC = () => {
                 <div className="pl-4 border-l border-slate-700 ml-1">
                     <code className="block text-slate-300">model.train()</code>
                     <div className={`transition-all duration-300 ${step === 4 ? 'bg-purple-900/40 text-purple-200' : 'text-slate-500'}`}>
-                        <code className="block">optimizer.zero_grad() <span className="text-slate-500 ml-2"># 清空上一步梯度</span></code>
+                        <code className="block">optimizer.zero_grad() <span className="text-slate-500 ml-2"># 清空梯度</span></code>
                     </div>
 
                     <div className={`transition-all duration-500 rounded px-2 -mx-2 my-1 ${step === 1 ? 'bg-blue-900/60 border-l-2 border-blue-400 text-white py-1' : 'text-slate-300 opacity-60'}`}>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center gap-4">
                            <span>out = model(data.x[train_idx])</span>
                            {step === 1 && <ChevronRight size={14} className="text-blue-400"/>}
                         </div>
                     </div>
 
                     <div className={`transition-all duration-500 rounded px-2 -mx-2 my-1 ${step === 2 ? 'bg-rose-900/60 border-l-2 border-rose-400 text-white py-1' : 'text-slate-300 opacity-60'}`}>
-                        <div className="flex justify-between items-center">
-                           <span>loss = F.nll_loss(out, data.y[train_idx])</span>
+                        <div className="flex justify-between items-center gap-4">
+                           <span>loss = F.nll_loss(out, data.y)</span>
                            {step === 2 && <ChevronRight size={14} className="text-rose-400"/>}
                         </div>
                     </div>
 
                     <div className={`transition-all duration-500 rounded px-2 -mx-2 my-1 ${step === 3 ? 'bg-amber-900/60 border-l-2 border-amber-400 text-white py-1' : 'text-slate-300 opacity-60'}`}>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center gap-4">
                            <span>loss.backward()</span>
                            {step === 3 && <ChevronRight size={14} className="text-amber-400"/>}
                         </div>
                     </div>
 
                     <div className={`transition-all duration-500 rounded px-2 -mx-2 my-1 ${step === 4 ? 'bg-purple-900/60 border-l-2 border-purple-400 text-white py-1' : 'text-slate-300 opacity-60'}`}>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center gap-4">
                            <span>optimizer.step()</span>
                            {step === 4 && <ChevronRight size={14} className="text-purple-400"/>}
                         </div>
@@ -246,8 +249,7 @@ export const TrainingView: React.FC = () => {
                 <code className="block text-yellow-500">for epoch in range(1, epochs + 1):</code>
                 <div className="pl-4 border-l border-slate-700 ml-1">
                     <code className="block text-slate-300">loss = train(model, data, ...)</code>
-                    <code className="block text-slate-300">eval_results = test(model, data, ...)</code>
-                    <code className="block text-slate-500">if epoch % 10 == 0: print(...)</code>
+                    <code className="block text-slate-300">if epoch % 10 == 0: print(...)</code>
                 </div>
 
              </div>
