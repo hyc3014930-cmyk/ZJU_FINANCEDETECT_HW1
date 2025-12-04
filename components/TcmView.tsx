@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, FileJson, Sparkles, ArrowRight, BookOpen, ListVideo, Loader2, Terminal, Calculator, Clock, Play, Stethoscope, Quote, Scan, Brain, Check, RotateCcw } from 'lucide-react';
+import { MessageSquare, FileJson, Sparkles, ArrowRight, BookOpen, ListVideo, Loader2, Terminal, Calculator, Clock, Play, Stethoscope, Quote, Scan, Check, RotateCcw } from 'lucide-react';
 
 export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) => {
   // --- State for Prompt Lab ---
