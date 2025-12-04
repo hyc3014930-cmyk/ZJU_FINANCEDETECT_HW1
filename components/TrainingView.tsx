@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Activity, Play, Pause, RotateCcw, FileCode, ChevronRight, BookOpen, Lightbulb, TrendingDown, TrendingUp } from 'lucide-react';
 

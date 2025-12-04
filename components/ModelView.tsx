@@ -189,16 +189,16 @@ export const ModelView: React.FC = () => {
                             </div>
 
                             <div className={`transition-all duration-300 ${hoveredPart === 'linear1' ? 'bg-indigo-900/50 -mx-4 px-4 py-1 border-l-2 border-indigo-400' : ''}`}>
-                                <code className="block text-slate-500 mt-1"># 第一层：输入 -> 隐藏</code>
+                                <code className="block text-slate-500 mt-1"># 第一层：输入 {'->'} 隐藏</code>
                                 <code className="block text-blue-300">self.lins.append(torch.nn.Linear(in_channels, hidden_channels))</code>
                             </div>
 
                             <div className={`transition-all duration-300 ${hoveredPart === 'linear2' ? 'bg-indigo-900/50 -mx-4 px-4 py-1 border-l-2 border-indigo-400' : ''}`}>
-                                <code className="block text-slate-500 mt-1"># 隐藏层 -> 隐藏层 (如果有更多层)</code>
+                                <code className="block text-slate-500 mt-1"># 隐藏层 {'->'} 隐藏层 (如果有更多层)</code>
                                 <code className="block text-blue-300">for _ in range(num_layers - 2):</code>
                                 <code className="block text-blue-300 pl-4">self.lins.append(...)</code>
 
-                                <code className="block text-slate-500 mt-1"># 最后一层：隐藏 -> 输出 (分类数)</code>
+                                <code className="block text-slate-500 mt-1"># 最后一层：隐藏 {'->'} 输出 (分类数)</code>
                                 <code className="block text-blue-300">self.lins.append(torch.nn.Linear(hidden_channels, out_channels))</code>
                             </div>
                             

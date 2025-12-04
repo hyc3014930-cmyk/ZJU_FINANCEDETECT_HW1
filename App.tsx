@@ -99,7 +99,7 @@ const App: React.FC = () => {
         <div className="flex-1 flex overflow-hidden">
             
             {/* Sub-Navigation Sidebar */}
-            <nav className="w-64 bg-white border-r border-slate-200 p-4 flex flex-col gap-2 overflow-y-auto flex-shrink-0">
+            <nav className="w-64 bg-white border-r border-slate-200 p-4 flex flex-col gap-2 overflow-y-auto flex-shrink-0 hidden md:flex">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Menu</div>
                 
                 {currentProject === Project.DGRAPH && (

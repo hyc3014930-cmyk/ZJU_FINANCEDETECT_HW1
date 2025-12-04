@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Image as ImageIcon, Layers, Cpu, ArrowRight, Settings, Box, BarChart3, ScanLine, Terminal, BookOpen, Trash2, Zap, Search, Loader2, History, Scaling, Grid, Minimize } from 'lucide-react';
 
@@ -165,7 +164,7 @@ def image_process(image):
                          <div className="bg-white p-4 rounded-lg border-2 border-rose-400 relative shadow-lg">
                              <div className="absolute top-2 right-2 text-[10px] bg-rose-500 text-white px-1 rounded animate-pulse">Trainable</div>
                              <div className="font-bold text-slate-800">Head</div>
-                             <div className="text-xs text-slate-500">GlobalPooling -> Dense(26)</div>
+                             <div className="text-xs text-slate-500">GlobalPooling {'->'} Dense(26)</div>
                          </div>
                      </div>
                  ) : (
@@ -250,7 +249,7 @@ network = mobilenet_v2(backbone, head)
                             {/* Simplified visualization */}
                        </svg>
                    </div>
-                   <div className="text-xs text-slate-500 mt-2 text-center">Epochs (0 -> 1000)</div>
+                   <div className="text-xs text-slate-500 mt-2 text-center">Epochs (0 {'->'} 1000)</div>
                </div>
            </div>
        </div>
