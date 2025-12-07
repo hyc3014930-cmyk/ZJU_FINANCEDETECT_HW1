@@ -1,0 +1,5 @@
+{
+  "name": "TCM AI Lab - Code Visualizer",
+  "description": "An interactive educational platform to visualize and understand the TCM diagnosis code pipeline, from LLM inference to vector embedding evaluation.",
+  "requestFramePermissions": []
+}
