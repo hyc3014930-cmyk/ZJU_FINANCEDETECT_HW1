@@ -12,8 +12,8 @@ const CodeHighlighter: React.FC<{
   const set = new Set(highlightedLines.map(n => n - 1));
 
   const baseClass = dark
-    ? 'font-mono text-xs text-slate-300 bg-slate-900 rounded p-3 overflow-x-auto border border-slate-700 relative'
-    : 'font-mono text-xs text-slate-700 bg-white rounded p-3 overflow-x-auto border border-slate-100 relative';
+    ? 'font-mono text-xs text-slate-300 bg-slate-900 rounded-xl p-3 overflow-auto border border-slate-700 relative'
+    : 'font-mono text-xs text-slate-700 bg-white rounded-xl p-3 overflow-auto border border-slate-100 relative';
 
   const getHighlightClass = (lineNumber: number) => {
     // lineNumber is 1-based
@@ -34,13 +34,13 @@ const CodeHighlighter: React.FC<{
         const lineNumber = i + 1;
         const hlClass = getHighlightClass(lineNumber);
         return (
-          <div key={i} className={`w-full group relative ${hlClass}`}>
-            <span className={`text-xs ${dark ? 'text-slate-500' : 'text-slate-400'} mr-3 inline-block w-8 text-right`}>{lineNumber}</span>
-            <span className="whitespace-pre">{ln}</span>
+          <div key={i} className={`w-full group relative ${hlClass} flex items-start`}> 
+            <span className={`text-xs ${dark ? 'text-slate-500' : 'text-slate-400'} mr-3 flex-none inline-block w-8 text-right`}>{lineNumber}</span>
+            <span className="flex-1 min-w-0 whitespace-pre-wrap break-words">{ln || ' '}</span>
 
             {lineTooltips[lineNumber] && (
-              <div className="absolute left-full ml-3 top-0 hidden group-hover:block max-w-xs z-20">
-                <div className="bg-black/90 text-white text-xs p-2 rounded shadow-lg">{lineTooltips[lineNumber]}</div>
+              <div className="absolute left-full ml-3 top-0 hidden group-hover:block max-w-[60vw] z-20">
+                <div className="bg-black/90 text-white text-xs p-2 rounded shadow-lg break-words">{lineTooltips[lineNumber]}</div>
               </div>
             )}
           </div>

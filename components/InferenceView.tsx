@@ -16,16 +16,17 @@ export const InferenceView: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col animate-fade-in-up">
-      <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+      <div className="p-6 border-b border-slate-100 bg-slate-50/50 relative">
         <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
           <Search className="text-amber-600" /> 第四步：预测推理 (Inference)
         </h2>
         <p className="text-slate-600 mt-2 text-sm">
            模型训练好后，我们就可以用它来抓坏人了。这里的关键是将概率转换为具体的分类标签。
         </p>
+
       </div>
 
-      <div className="flex-1 bg-slate-50/30 overflow-hidden flex flex-col lg:flex-row">
+      <div className="flex-1 bg-slate-50/30 overflow-hidden flex flex-col lg:flex-row p-0.5">
         
         {/* Left: Interaction Area */}
         <div className="flex-1 p-6 overflow-y-auto">
@@ -114,10 +115,10 @@ export const InferenceView: React.FC = () => {
         </div>
 
         {/* Right: Code */}
-        <div className="w-full lg:w-[450px] bg-slate-900 border-l border-slate-700 p-6 shadow-xl overflow-y-auto">
-             <div className="flex items-center gap-2 text-slate-400 mb-6 pb-2 border-b border-slate-700">
-                <FileCode size={16} />
-                <span className="text-sm font-bold">predict.py</span>
+        <div className="w-full lg:w-[450px] bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden flex flex-col flex-shrink-0 z-10">
+             <div className="p-3 border-b border-slate-700 bg-slate-900 flex items-center gap-2 text-slate-400 sticky top-0">
+                <FileCode size={14} />
+                <span className="text-xs font-bold">inference.py</span>
              </div>
 
              <div className="font-mono text-xs leading-loose space-y-4">
@@ -156,7 +157,7 @@ export const InferenceView: React.FC = () => {
                  <p className="leading-relaxed mb-2">
                      <code>torch.argmax</code> 会返回数组中<strong>最大值所在的索引</strong>。
                  </p>
-                 <div className="bg-slate-900 p-2 rounded font-mono text-xs mb-2">
+                 <div className="bg-slate-900 p-2 rounded-xl font-mono text-xs mb-2">
                     输入: [0.1, 0.9] <br/>
                     最大值: 0.9 <br/>
                     索引: 1 (代表欺诈)

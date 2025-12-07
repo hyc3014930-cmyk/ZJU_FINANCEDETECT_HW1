@@ -280,8 +280,8 @@ export const TcmView: React.FC<{ activeSubTab: string }> = ({ activeSubTab }) =>
         </div>
 
         {/* Bottom/Right: Code (Mobile: Bottom, Desktop: Right) */}
-        <div className="h-[40vh] lg:h-auto lg:w-[450px] bg-slate-900 border-t lg:border-t-0 lg:border-l border-slate-700 flex flex-col flex-shrink-0 z-10 shadow-xl">
-             <div className="p-3 border-b border-slate-800 bg-slate-900 flex items-center gap-2 text-emerald-400 sticky top-0">
+        <div className="h-[40vh] lg:h-auto lg:w-[450px] bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden flex flex-col flex-shrink-0 z-10">
+             <div className="p-3 border-b border-slate-700 bg-slate-900 flex items-center gap-2 text-emerald-400 sticky top-0 rounded-t-xl">
                 <Terminal size={14} /> 
                 <span className="text-xs font-bold">Source Code</span>
              </div>

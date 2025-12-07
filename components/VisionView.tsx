@@ -204,7 +204,7 @@ def image_process(image):
                              
                              {/* Feature Map Visualization with Animation */}
                              <div className="relative">
-                                 <div className="grid grid-cols-7 gap-1 bg-slate-900 p-2 rounded relative overflow-hidden">
+                                 <div className="grid grid-cols-7 gap-1 bg-slate-900 p-2 rounded-xl relative overflow-hidden">
                                      {/* Animated overlay */}
                                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent animate-[sweep_3s_ease-in-out_infinite] pointer-events-none"></div>
                                      <style>{`
@@ -367,7 +367,7 @@ def image_process(image):
                          <div className="space-y-4">
                              {/* Before Pooling */}
                              <div className="relative">
-                                 <div className={`grid grid-cols-7 gap-1 bg-slate-900 p-2 rounded transition-all duration-1000 ${
+                                 <div className={`grid grid-cols-7 gap-1 bg-slate-900 p-2 rounded-xl transition-all duration-1000 ${
                                      poolingStep >= 1 ? 'opacity-50 scale-95' : 'opacity-100'
                                  }`}>
                                      {Array.from({length: 49}).map((_, i) => {
@@ -443,8 +443,8 @@ def image_process(image):
             </div>
        </div>
 
-       <div className="h-[40vh] lg:h-auto lg:w-[450px] bg-slate-900 border-t lg:border-t-0 lg:border-l border-slate-700 flex flex-col flex-shrink-0 z-10 shadow-xl">
-            <div className="p-3 border-b border-slate-800 bg-slate-900 flex items-center gap-2 text-cyan-400 sticky top-0">
+       <div className="h-[40vh] lg:h-auto lg:w-[450px] bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden flex flex-col flex-shrink-0 z-10">
+            <div className="p-3 border-b border-slate-700 bg-slate-900 flex items-center gap-2 text-cyan-400 sticky top-0 rounded-t-xl">
                <Terminal size={14} /> <span className="text-xs font-bold">Source Code</span>
             </div>
             <div className="flex-1 overflow-x-auto overflow-y-auto p-4 font-mono text-xs leading-relaxed text-slate-300 whitespace-pre custom-scrollbar">

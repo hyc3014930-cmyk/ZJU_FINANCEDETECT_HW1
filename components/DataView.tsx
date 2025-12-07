@@ -16,13 +16,14 @@ export const DataView: React.FC = () => {
   return (
     <div className="h-full flex flex-col animate-fade-in-up">
       {/* Header */}
-      <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+      <div className="p-6 border-b border-slate-100 bg-slate-50/50 relative">
         <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
           <Database className="text-blue-600" /> 第一步：数据准备 (Data Preparation)
         </h2>
         <p className="text-slate-600 mt-2 text-sm">
           任何 AI 模型的第一步都是“喂数据”。这里展示了如何加载 DGraphFin 数据集，并进行关键的“归一化”处理。
         </p>
+
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50/30">

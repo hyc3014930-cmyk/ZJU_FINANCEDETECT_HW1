@@ -42,7 +42,7 @@ export const ModelView: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col animate-fade-in-up">
-      <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-start">
+      <div className="p-6 border-b border-slate-100 bg-slate-50/50 relative">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
             <Layers className="text-purple-600" /> MLP 模型架构 (Model Architecture)
@@ -51,9 +51,10 @@ export const ModelView: React.FC = () => {
              左侧是模型的“X光片”，右侧是其“基因图谱”（源代码）。点击右侧的“原理实验室”可以亲手验证数学原理。
           </p>
         </div>
+
       </div>
 
-      <div className="flex-1 bg-white overflow-hidden flex flex-col lg:flex-row">
+      <div className="flex-1 bg-white overflow-hidden flex flex-col lg:flex-row p-0.5" style={{ minHeight: 0 }}>
         
         {/* Left: Visualization */}
         <div className="flex-1 p-4 flex items-center justify-center bg-slate-50/30 relative">
@@ -155,19 +156,19 @@ export const ModelView: React.FC = () => {
         </div>
 
         {/* Right: Code & Concepts */}
-        <div className="w-full lg:w-[500px] bg-slate-900 border-l border-slate-700 shadow-xl flex flex-col h-[600px] lg:h-auto">
+        <div className="w-full lg:w-[450px] bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden flex flex-col flex-shrink-0 z-10">
            
            {/* Tabs */}
-           <div className="flex border-b border-slate-700 bg-slate-800 flex-shrink-0">
+           <div className="flex border-b border-slate-700 bg-slate-900 flex-shrink-0 rounded-t-xl">
               <button 
                 onClick={() => setActiveTab('code')}
-                className={`flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'code' ? 'text-blue-400 bg-slate-900 border-t-2 border-blue-400' : 'text-slate-500 hover:text-slate-300 border-t-2 border-transparent'}`}
+                className={`flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'code' ? 'text-blue-400 bg-slate-800 border-t-2 border-blue-400' : 'text-slate-500 hover:text-slate-300 border-t-2 border-transparent'}`}
               >
                 <Code2 size={14} /> 完整代码
               </button>
               <button 
                 onClick={() => setActiveTab('concepts')}
-                className={`flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'concepts' ? 'text-purple-400 bg-slate-900 border-t-2 border-purple-400' : 'text-slate-500 hover:text-slate-300 border-t-2 border-transparent'}`}
+                className={`flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'concepts' ? 'text-purple-400 bg-slate-800 border-t-2 border-purple-400' : 'text-slate-500 hover:text-slate-300 border-t-2 border-transparent'}`}
               >
                 <Calculator size={14} /> 原理实验室
               </button>
@@ -279,7 +280,7 @@ export const ModelView: React.FC = () => {
                     </div>
 
                     {/* Visualization Graph */}
-                    <div className="relative h-40 bg-slate-900 rounded border border-slate-700 overflow-hidden flex items-center justify-center">
+                    <div className="relative h-40 bg-slate-900 rounded-xl border border-slate-700 overflow-hidden flex items-center justify-center">
                         {/* Grid Lines */}
                         <div className="absolute w-full h-[1px] bg-slate-600 bottom-5"></div> {/* X Axis */}
                         <div className="absolute h-full w-[1px] bg-slate-600 left-1/2"></div> {/* Y Axis */}
@@ -359,7 +360,7 @@ export const ModelView: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="relative h-40 bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                    <div className="relative h-40 bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
                          {/* Graph y = w^2. w range -3 to 3. Loss range 0 to 9. */}
                          <svg className="absolute inset-0 w-full h-full" viewBox="-3 0 6 9" preserveAspectRatio="none">
                              {/* Note on SVG Coords:
@@ -418,7 +419,7 @@ export const ModelView: React.FC = () => {
                        <button onClick={() => setSoftmaxStep(3)} className={`flex-1 text-[10px] py-1 rounded ${softmaxStep === 3 ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>4. Div</button>
                     </div>
 
-                    <div className="bg-slate-900 p-4 rounded border border-slate-700 font-mono text-xs space-y-3 min-h-[140px]">
+                    <div className="bg-slate-900 p-4 rounded-xl border border-slate-700 font-mono text-xs space-y-3 min-h-[140px]">
                         {softmaxStep === 0 && (
                            <div className="animate-fade-in-up">
                               <div className="text-slate-500 mb-2"># 原始输出 Logits</div>

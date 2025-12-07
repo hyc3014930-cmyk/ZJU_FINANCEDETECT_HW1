@@ -6,17 +6,18 @@ export const IntroView: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col animate-fade-in-up">
-      <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+      <div className="p-6 border-b border-slate-100 bg-slate-50/50 relative">
         <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
           <BookOpen className="text-slate-700" /> 0. 项目背景 (Context)
         </h2>
         <p className="text-slate-600 mt-2 text-sm">
           了解为什么我们要使用神经网络来检测金融欺诈，以及 DGraph 数据集是什么。
         </p>
+
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50/30">
-        
+        <div className="">
         {/* Section 1: Business Context */}
         <section className="mb-10">
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -165,7 +166,7 @@ export const IntroView: React.FC = () => {
                 </div>
             </div>
         </section>
-
+        </div>
       </div>
     </div>
   );
