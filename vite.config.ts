@@ -17,7 +17,12 @@ export default defineConfig(({ mode }) => {
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
-        }
-      }
+          'react-syntax-highlighter': path.resolve(__dirname, 'node_modules/react-syntax-highlighter'),
+        },
+        preserveSymlinks: true,
+      },
+      optimizeDeps: {
+        include: ['react-syntax-highlighter'],
+      },
     };
 });

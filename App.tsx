@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Database, Brain, Activity, Search, Code, Layers, BookOpen, MessageSquare, Scale, Image as ImageIcon, Box, LayoutGrid, Zap, ScanLine, ListVideo, Calculator } from 'lucide-react';
+import { Database, Brain, Activity, Search, Code, Layers, BookOpen, MessageSquare, Scale, Image as ImageIcon, Box, LayoutGrid, Zap, ScanLine, ListVideo, Calculator, ChevronRight } from 'lucide-react';
 import { TabView, Project } from './types';
 import { DataView } from './components/DataView';
 import { ModelView } from './components/ModelView';
 import { TrainingView } from './components/TrainingView';
 import { InferenceView } from './components/InferenceView';
 import { IntroView } from './components/IntroView';
-import { TcmView } from './components/TcmView';
-import { VisionView } from './components/VisionView';
 import StartPage from './components/StartPage';
+import GarbageLabWrapper from './components/GarbageLabWrapper';
+import TcmLabWrapper from './components/TcmLabWrapper';
 
 const App: React.FC = () => {
   const [currentProject, setCurrentProject] = useState<Project>(Project.DGRAPH);
@@ -28,22 +28,19 @@ const App: React.FC = () => {
         if (showStart) {
             return (
                 <StartPage onSelect={(m) => {
-                    // module mapping:
-                    // 1 -> 金融异常检测 (DGraph project)
-                    // 2 -> TCM 中医大模型助手 (TCM project)
-                    // 3 -> Garbage 垃圾分类视觉模型 (Vision project)
+                    // 1 -> 金融异常检测, 2 -> Garbage 垃圾分类视觉模型 (attached lab), 3 -> TCM 中医辨证模型
                     setShowStart(false);
                     if (m === 1) {
                         setCurrentProject(Project.DGRAPH);
                         setActiveTab(TabView.INTRO);
                     }
                     if (m === 2) {
-                        setCurrentProject(Project.TCM);
-                        setActiveTab(TabView.TCM_INTRO);
-                    }
-                    if (m === 3) {
                         setCurrentProject(Project.VISION);
                         setActiveTab(TabView.CV_INTRO);
+                    }
+                    if (m === 3) {
+                        setCurrentProject(Project.TCM);
+                        setActiveTab(TabView.TCM_INTRO);
                     }
                 }} onCancel={() => setShowStart(false)} />
             );
@@ -59,14 +56,15 @@ const App: React.FC = () => {
         default: return <IntroView />;
         }
     }
-    // 2. TCM (LLM)
-    if (currentProject === Project.TCM) {
-        return <TcmView activeSubTab={activeTab} />;
-    }
-    // 3. Vision (CV)
+    // Render Vision (Garbage Lab) when selected
     if (currentProject === Project.VISION) {
-        return <VisionView activeSubTab={activeTab} />;
+        return <GarbageLabWrapper />;
     }
+    // Render TCM (Traditional Chinese Medicine) Lab when selected
+    if (currentProject === Project.TCM) {
+        return <TcmLabWrapper />;
+    }
+
     return null;
   };
 
@@ -75,31 +73,31 @@ const App: React.FC = () => {
       
       {/* 1. Global Project Sidebar (Leftmost) */}
       <aside className="w-20 bg-slate-900 flex flex-col items-center py-6 gap-6 z-20 shadow-xl flex-shrink-0">
-         <div className="bg-blue-600 p-3 rounded-xl text-white shadow-lg shadow-blue-900/50 mb-4">
-             <Code size={24} />
+         <div className="bg-blue-600 p-3 rounded-xl text-white shadow-lg shadow-blue-900/50 mb-4 w-10 h-10 flex items-center justify-center">
+             <span className="font-bold text-sm">ZJU</span>
          </div>
          
-         <ProjectIcon 
-            active={currentProject === Project.DGRAPH} 
-            onClick={() => handleProjectSwitch(Project.DGRAPH)}
-            icon={<LayoutGrid size={24} />}
-            label="Finance"
-            color="text-blue-400"
-         />
-         <ProjectIcon 
-            active={currentProject === Project.TCM} 
-            onClick={() => handleProjectSwitch(Project.TCM)}
-            icon={<MessageSquare size={24} />}
-            label="TCM-LLM"
-            color="text-emerald-400"
-         />
-         <ProjectIcon 
-            active={currentProject === Project.VISION} 
-            onClick={() => handleProjectSwitch(Project.VISION)}
-            icon={<ImageIcon size={24} />}
-            label="Vision"
-            color="text-cyan-400"
-         />
+                <ProjectIcon 
+                    active={currentProject === Project.DGRAPH} 
+                    onClick={() => handleProjectSwitch(Project.DGRAPH)}
+                    icon={<LayoutGrid size={24} />}
+                    label="金融异常检测"
+                    color="text-blue-400"
+                />
+                <ProjectIcon 
+                    active={currentProject === Project.VISION} 
+                    onClick={() => handleProjectSwitch(Project.VISION)}
+                    icon={<ImageIcon size={24} />}
+                    label="垃圾分类"
+                    color="text-emerald-400"
+                />
+                <ProjectIcon 
+                    active={currentProject === Project.TCM} 
+                    onClick={() => handleProjectSwitch(Project.TCM)}
+                    icon={<Brain size={24} />}
+                    label="中医辨证"
+                    color="text-purple-400"
+                />
       </aside>
 
       {/* 2. Project Navigation Sidebar & Main Content */}
@@ -123,9 +121,24 @@ const App: React.FC = () => {
         {/* Workspace */}
         <div className="flex-1 flex overflow-hidden">
             
-            {/* Sub-Navigation Sidebar */}
-            <nav className="w-64 bg-white border-r border-slate-200 p-4 flex flex-col gap-2 overflow-y-auto flex-shrink-0 hidden md:flex">
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Menu</div>
+            {/* Sub-Navigation Sidebar (hidden when Vision or TCM project selected so embedded lab shows its own menu) */}
+            {currentProject !== Project.VISION && currentProject !== Project.TCM && (
+            <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shadow-lg z-20 flex-shrink-0">
+                {/* Sidebar Header */}
+                <div className="p-6 border-b border-slate-100">
+                      <div className="flex items-center gap-3">
+                         <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-blue-200 shadow-md">
+                           <Box className="w-6 h-6" />
+                         </div>
+                        <div>
+                            <h1 className="font-bold text-lg text-slate-800 tracking-tight leading-none">金融异常检测 Lab</h1>
+                            <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Finance Experiment</span>
+                        </div>
+                     </div>
+                </div>
+                
+                {/* Navigation List */}
+                <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
                 
                 {currentProject === Project.DGRAPH && (
                     <>
@@ -136,30 +149,21 @@ const App: React.FC = () => {
                         <NavButton active={activeTab === TabView.INFERENCE} onClick={() => setActiveTab(TabView.INFERENCE)} icon={<Search size={18} />} label="4. 预测推理" />
                     </>
                 )}
-
-                {currentProject === Project.TCM && (
-                    <>
-                        <NavButton active={activeTab === TabView.TCM_INTRO} onClick={() => setActiveTab(TabView.TCM_INTRO)} icon={<BookOpen size={18} />} label="0. 项目背景" />
-                        <NavButton active={activeTab === TabView.TCM_PROMPT} onClick={() => setActiveTab(TabView.TCM_PROMPT)} icon={<MessageSquare size={18} />} label="1. 提示工程 (Prompt)" />
-                        <NavButton active={activeTab === TabView.TCM_BATCH} onClick={() => setActiveTab(TabView.TCM_BATCH)} icon={<ListVideo size={18} />} label="2. 批量处理 (Batch)" />
-                        <NavButton active={activeTab === TabView.TCM_EVAL} onClick={() => setActiveTab(TabView.TCM_EVAL)} icon={<Calculator size={18} />} label="3. 效果评估 (Score)" />
-                    </>
-                )}
-
-                {currentProject === Project.VISION && (
-                    <>
-                        <NavButton active={activeTab === TabView.CV_INTRO} onClick={() => setActiveTab(TabView.CV_INTRO)} icon={<BookOpen size={18} />} label="0. 项目背景" />
-                        <NavButton active={activeTab === TabView.CV_PIPELINE} onClick={() => setActiveTab(TabView.CV_PIPELINE)} icon={<ScanLine size={18} />} label="1. 图像流水线" />
-                        <NavButton active={activeTab === TabView.CV_ARCH} onClick={() => setActiveTab(TabView.CV_ARCH)} icon={<Layers size={18} />} label="2. MobileNet 架构" />
-                        <NavButton active={activeTab === TabView.CV_TRAIN} onClick={() => setActiveTab(TabView.CV_TRAIN)} icon={<Zap size={18} />} label="3. 迁移训练 & LR" />
-                        <NavButton active={activeTab === TabView.CV_INFERENCE} onClick={() => setActiveTab(TabView.CV_INFERENCE)} icon={<Search size={18} />} label="4. 预测推理" />
-                    </>
-                )}
-            </nav>
+                </nav>
+                
+                {/* Sidebar Footer */}
+                <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+                     <div className="flex items-center gap-2 p-3 bg-white border border-slate-200 rounded-lg">
+                        <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                        <span className="text-xs font-mono text-slate-500">Python 3.9 Ready</span>
+                     </div>
+                </div>
+            </aside>
+            )}
 
             {/* Viewport */}
             <main className="flex-1 bg-slate-50 relative overflow-hidden flex flex-col">
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-y-auto">
                     {renderContent()}
                 </div>
             </main>
@@ -185,18 +189,42 @@ const ProjectIcon: React.FC<{ active: boolean, onClick: () => void, icon: React.
     </button>
 );
 
-const NavButton: React.FC<{ active: boolean, onClick: () => void, icon: React.ReactNode, label: string }> = ({ active, onClick, icon, label }) => (
+const NavButton: React.FC<{ active: boolean, onClick: () => void, icon: React.ReactNode, label: string }> = ({ active, onClick, icon, label }) => {
+  // 添加子标签，从label中提取数字部分作为子标签
+  const subLabels = {
+    '0. 项目背景': 'Project Context',
+    '1. 数据准备': 'Data Preparation',
+    '2. MLP 模型架构': 'Model Architecture',
+    '3. 训练循环': 'Training Loop',
+    '4. 预测推理': 'Inference'
+  };
+  
+  return (
     <button
       onClick={onClick}
-      className={`w-full text-left px-3 py-3 rounded-lg flex items-center gap-3 transition-all ${
-        active 
-          ? 'bg-slate-100 text-slate-900 font-bold shadow-sm' 
-          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-      }`}
+      className={`w-full text-left flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 group relative
+        ${active 
+          ? 'bg-blue-600 text-white shadow-md shadow-blue-200' 
+          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent hover:border-slate-100'
+        }
+      `}
     >
-      <div className={active ? 'text-blue-600' : 'text-slate-400'}>{icon}</div>
-      <span className="text-sm">{label}</span>
+      <div className={`w-5 h-5 flex-shrink-0 ${active ? 'text-blue-100' : 'text-slate-400 group-hover:text-blue-500'}`}>{icon}</div>
+      
+      <div className="flex-1 min-w-0">
+          <div className={`font-medium text-sm truncate ${active ? 'text-white' : 'text-slate-700'}`}>
+              {label}
+          </div>
+          <div className={`text-[11px] truncate mt-0.5 ${active ? 'text-blue-200' : 'text-slate-400 group-hover:text-slate-500'}`}>
+              {subLabels[label as keyof typeof subLabels] || ''}
+          </div>
+      </div>
+
+      {active && (
+          <ChevronRight className="w-4 h-4 text-blue-300" />
+      )}
     </button>
-);
+  );
+};
 
 export default App;
