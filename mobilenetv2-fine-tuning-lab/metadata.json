@@ -1,0 +1,5 @@
+{
+  "name": "MobileNetV2 Fine-tuning Lab",
+  "description": "An interactive educational dashboard to visualize MobileNetV2 architecture, simulate fine-tuning strategies, and explore checkpoint concepts with an AI tutor.",
+  "requestFramePermissions": []
+}
